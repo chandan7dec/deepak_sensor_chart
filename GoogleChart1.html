@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+    
+        
+    var jsonData = $.ajax({
+          url: "http://localhost:3000/",
+          dataType: "json",
+          async: false
+          }).responseText;
+          
+          var arrChart = [['time', 'point']];    // Define an array and assign columns for the chart.
+    
+          console.log(jsonData);
+    // Loop through each data and populate the array.
+    var obj = JSON.parse(jsonData);
+    for (var x in obj){
+        
+        myDate = new Date(1000*obj[x].time);
+        arrChart.push(
+            [
+            myDate.toUTCString(), obj[x].point
+            ]
+        );
+        //arrChart.push([parseInt(x.time), parseInt(x.point)]); 
+        
+}
+console.log(arrChart);
+
+          
+google.load("visualization", "1", { packages: ["corechart"] });
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var options = {
+            title: 'Sensor S1 vs time stamp Graph',
+            width: 2400,
+            height: 700,
+            bar: { groupWidth: "95%" },
+            legend: { position: "none" },
+            isStacked: true,
+            legend: true
+        };
+        var data = google.visualization.arrayToDataTable(arrChart);
+        var chart = new google.visualization.LineChart($("#chart")[0]);
+        chart.draw(data, options);
+
+        
+    }
+</script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    
+    <div id="chart" style="width: 900px; height: 500px;">
+</div>
+<div id="chart1" style="width: 900px; height: 500px;">
+</div>
+
+    </form>
+</body>
+</html>
